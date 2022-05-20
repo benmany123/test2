@@ -1,0 +1,25 @@
+.loginDog{
+    background: #06D6A0;
+    width: 900px;    
+    padding: 100px;
+    margin: auto;
+}
+.loginDog h1{
+    color: #073B4C;
+    font-size: 50px;
+}
+.loginDog h2{
+    color: #073B4C;
+    font-size: 30px;
+}
+.loginDog form button{
+    width: 170px;
+    background: #FFD166;
+    color: #073B4C;
+    font-weight: bold;
+}
+.loginDog form a{
+    color: #073B4C;
+    font-weight: bold;
+    font-size: 30px;
+}

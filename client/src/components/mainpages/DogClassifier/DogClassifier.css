@@ -1,0 +1,10 @@
+.classify-page{
+  max-width: 700px;    
+  background: #06D6A0;
+  padding: 50px;
+  margin: 70px auto;
+}
+img {
+  max-width: 50;
+  height: auto;
+}

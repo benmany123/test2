@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: controllers/userCtrl.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: controllers/userCtrl.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * Controller providing user related control
+ * @module controllers/userCtrl
+ * @requires models/userModel
+ * @requires bcrypt
+ * @requires jsonwebtoken
+ */
+const Users = require('../models/userModel')
+const bcrypt = require('bcrypt')
+const jwt = require('jsonwebtoken')
+
+/**
+ * User controller
+ * @property {{register}}
+ * @property {{login}}
+ * @property {{logout}}
+ * @property {{refreshToken}}
+ * @property {{getUser}}
+ * @property {{addCart}}
+ */
+const userCtrl = {
+    register: async (req, res) =>{
+        try {
+            const {name, email, password} = req.body;
+
+            const user = await Users.findOne({email})
+            if(user) return res.status(400).json({msg: "The email already exists."})
+
+            if(password.length &lt; 6) 
+                return res.status(400).json({msg: "Password is at least 6 characters long."})
+
+            const passwordHash = await bcrypt.hash(password, 10)
+            const newUser = new Users({
+                name, email, password: passwordHash
+            })
+
+            await newUser.save()
+
+            const accesstoken = createAccessToken({id: newUser._id})
+            const refreshtoken = createRefreshToken({id: newUser._id})
+
+            res.cookie('refreshtoken', refreshtoken, {
+                httpOnly: true,
+                path: '/user/refresh_token',
+                maxAge: 7*24*60*60*1000
+            })
+
+            res.json({accesstoken})
+
+        } catch (err) {
+            return res.status(500).json({msg: err.message})
+        }
+    },
+    login: async (req, res) =>{
+        try {
+            const {email, password} = req.body;
+
+            const user = await Users.findOne({email})
+            if(!user) return res.status(400).json({msg: "User does not exist."})
+
+            const isMatch = await bcrypt.compare(password, user.password)
+            if(!isMatch) return res.status(400).json({msg: "Incorrect password."})
+
+            // If login success , create access token and refresh token
+            const accesstoken = createAccessToken({id: user._id})
+            const refreshtoken = createRefreshToken({id: user._id})
+
+            res.cookie('refreshtoken', refreshtoken, {
+                httpOnly: true,
+                path: '/user/refresh_token',
+                maxAge: 7*24*60*60*1000 // 7d
+            })
+
+            res.json({accesstoken})
+
+        } catch (err) {
+            return res.status(500).json({msg: err.message})
+        }
+    },
+    logout: async (req, res) =>{
+        try {
+            res.clearCookie('refreshtoken', {path: '/user/refresh_token'})
+            return res.json({msg: "Logged out"})
+        } catch (err) {
+            return res.status(500).json({msg: err.message})
+        }
+    },
+    refreshToken: (req, res) =>{
+        try {
+            const rf_token = req.cookies.refreshtoken;
+            if(!rf_token) return res.status(400).json({msg: "Please Login or Register"})
+
+            jwt.verify(rf_token, process.env.REFRESH_TOKEN_SECRET, (err, user) =>{
+                if(err) return res.status(400).json({msg: "Please Login or Register"})
+
+                const accesstoken = createAccessToken({id: user.id})
+
+                res.json({accesstoken})
+            })
+
+        } catch (err) {
+            return res.status(500).json({msg: err.message})
+        }
+        
+    },
+    getUser: async (req, res) =>{
+        try {
+            const user = await Users.findById(req.user.id).select('-password')
+            if(!user) return res.status(400).json({msg: "User does not exist."})
+
+            res.json(user)
+        } catch (err) {
+            return res.status(500).json({msg: err.message})
+        }
+    },
+    addCart: async (req, res) =>{
+        try {
+            const user = await Users.findById(req.user.id)
+            if(!user) return res.status(400).json({msg: "User does not exist."})
+
+            await Users.findOneAndUpdate({_id: req.user.id}, {
+                cart: req.body.cart
+            })
+
+            return res.json({msg: "Added to cart"})
+        } catch (err) {
+            return res.status(500).json({msg: err.message})
+        }
+    }
+ }
+
+
+const createAccessToken = (user) =>{
+    return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {expiresIn: '11m'})
+}
+const createRefreshToken = (user) =>{
+    return jwt.sign(user, process.env.REFRESH_TOKEN_SECRET, {expiresIn: '7d'})
+}
+
+module.exports = userCtrl
+
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-controllers_categoryCtrl.html">controllers/categoryCtrl</a></li><li><a href="module-controllers_dogCtrl.html">controllers/dogCtrl</a></li><li><a href="module-controllers_userCtrl.html">controllers/userCtrl</a></li><li><a href="module-middleware_auth.html">middleware/auth</a></li><li><a href="module-models_categoryModel.html">models/categoryModel</a></li><li><a href="module-models_dogModel.html">models/dogModel</a></li><li><a href="module-models_userModel.html">models/userModel</a></li><li><a href="module-routes_categoryRouter.html">routes/categoryRouter</a></li><li><a href="module-routes_upload.html">routes/upload</a></li><li><a href="test_categories.module_test.html">test</a></li><li><a href="test_dog.module_test.html">test</a></li></ul><h3>Classes</h3><ul><li><a href="module-controllers_dogCtrl-APIfeatures.html">APIfeatures</a></li></ul><h3>Global</h3><ul><li><a href="global.html#PORT">PORT</a></li><li><a href="global.html#server">server</a></li><li><a href="global.html#URI">URI</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.10</a> on Tue May 17 2022 22:40:11 GMT+0800 (香港標準時間)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

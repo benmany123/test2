@@ -1,0 +1,33 @@
+{
+  "name": "dogshelter",
+  "version": "1.0.0",
+  "description": "A dog shelter project",
+  "main": "server.js",
+  "scripts": {
+    "server": "nodemon server.js",
+    "client": "cd client && npm run start",
+    "server-install": "npm install",
+    "client-install": "cd client && npm install",
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "build": "cd client && npm install && npm run build",
+    "jsdoc": "jsdoc -c jsdoc.json"
+  },
+  "dependencies": {
+    "@tensorflow/tfjs": "^3.16.0",
+    "antd": "^4.20.1",
+    "bcrypt": "^5.0.0",
+    "cloudinary": "^1.23.0",
+    "cookie-parser": "^1.4.5",
+    "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "express-fileupload": "^1.2.0",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^5.10.1",
+    "swagger-jsdoc": "^6.2.1",
+    "swagger-ui-express": "^4.4.0"
+  },
+  "devDependencies": {
+    "jsdoc": "^3.6.10"
+  }
+}

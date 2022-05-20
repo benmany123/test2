@@ -1,0 +1,19 @@
+.cart{
+    position: relative;
+    border: 2px solid grey;
+    transform: scaleY(0.98);
+}
+.delete{
+    position: absolute;
+    top:0;
+    right: 5px;
+    color: #FFD166;
+    font-weight: 900;
+    cursor: pointer;
+}
+h4{
+    color: #118AB2;
+    text-align: center;
+    font-size: 100px;
+    font-weight: bold;
+}

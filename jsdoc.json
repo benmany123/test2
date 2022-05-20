@@ -1,0 +1,16 @@
+{
+    "plugins": ["plugins/markdown"],
+    "source": {
+        "include":["../dog"],
+        "includePattern": ".js$",
+        "excludePattern": "(client/node_modules|client/public|node_modules)"
+    },
+    "templates": {
+        "cleverLinks": true,
+        "monospaceLinks": true
+    },
+    "opts": {       
+            "destination": "./jsdoc/",          
+            "recurse": true
+        }
+}

@@ -1,0 +1,16 @@
+@import url("./components/headers/header.css");
+@import url("./components/mainpages/dogs/dogs.css");
+@import url("./components/mainpages/detailDog/detailDog.css");
+@import url("./components/mainpages/auth/login.css");
+@import url("./components/mainpages/cart/cart.css");
+@import url("./components/mainpages/categories/categories.css");
+@import url("./components/mainpages/createDog/createDog.css");
+
+.App{
+  max-width: 1200px;
+  margin: 0 auto;
+  box-shadow: 0 0 35px #eee;
+}
+a{
+  text-decoration: none;
+}

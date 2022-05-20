@@ -1,0 +1,22 @@
+.box-detail{
+    max-width: 500px;
+    width: 100%;
+    margin: 5px 20px;
+}
+.box-detail h2{
+    color: #073B4C;
+}
+.box-detail .cart{
+    background: #EF476F;
+    color: white;
+    margin: 10px;
+    padding: 10px;
+}
+.detail{
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    padding: 50px;
+    font-size: 150%;
+}
